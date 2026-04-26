@@ -5,6 +5,8 @@ on:
     branches: [main, dev]
   push:
     branches: [main, dev]
+permissions: 
+  contents: write
 
 jobs:
   # ── A. PR ONLY: SonarQube + Snyk validation ───────────────────────────────
@@ -41,7 +43,10 @@ jobs:
   push-image:
     name: Push to DockerHub
     needs: [build]
-    if: github.event_name == 'push' && needs.build.result == 'success'
+    if: |
+       always() &&
+       github.event_name == 'push' &&
+       needs.build.result == 'success'
     uses: shopnovaorg/shopnovaorg-shared/.github/workflows/push.yaml@main
     with:
       image-name: abhinavbabu33/shopnova-frontend
